@@ -108,3 +108,8 @@ def newaliment():
         flash('Congratulations, you added a new aliment !')
         return redirect(url_for('newaliment'))
     return render_template('newAliment.html', title='NewAliment', form=form)
+
+@app.route('/explorealiments', methods=['GET', 'POST'])
+def explorealiments():
+    get_aliments = aliments.query.order_by(aliments.id)
+    return render_template('aliments.html', title='explorealiments', get_aliments=get_aliments)
