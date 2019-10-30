@@ -14,6 +14,7 @@ def before_request():
         db.session.commit()
 
 
+
 @app.route('/')
 @app.route('/index')
 @login_required
