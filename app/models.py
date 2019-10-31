@@ -12,7 +12,7 @@ class User(UserMixin, db.Model):
     username = db.Column(db.String(64), index=True, unique=True)
     email = db.Column(db.String(120), index=True, unique=True)
     password_hash = db.Column(db.String(128))
-    aliments = db.relationship('aliments', backref='author', lazy='dynamic')
+    aliments = db.relationship('Aliment', backref='author', lazy='dynamic')
     about_me = db.Column(db.String(140))
     last_seen = db.Column(db.DateTime, default=datetime.utcnow)
     is_admin = db.Column(db.Integer,  default=0)
@@ -58,10 +58,8 @@ class User(UserMixin, db.Model):
 def load_user(id):
     return User.query.get(int(id))
 
-# admin.add_view(ModelView(User, db.session))
 
-
-class aliments(db.Model):
+class Aliment(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     aliment_name = db.Column(db.String(140))
     description = db.Column(db.String(140))
@@ -72,4 +70,4 @@ class aliments(db.Model):
 
         
 admin.add_view(ModelView(User, db.session))
-admin.add_view(ModelView(aliments, db.session))
+admin.add_view(ModelView(Aliment, db.session))

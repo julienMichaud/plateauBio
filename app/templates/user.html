@@ -15,7 +15,14 @@
         </tr>
     </table>
     <hr>
-    {% for post in posts %}
-        {% include '_post.html' %}
+    <p> {{ user_aliments }} </p>
+    {% for aliment in user_aliments %}
+    <table>
+        <tr valign="top">
+            <td><br>{{ aliment.id }}  </td>
+            <td><br>{{ aliment.aliment_name }}</td>
+            <td><br>{{ aliment.description }}</td>
+        </tr>
+    </table>
     {% endfor %}
 {% endblock %}

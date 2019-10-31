@@ -3,7 +3,7 @@ from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
 from app import app, db
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AlimentsForm
-from app.models import User, aliments
+from app.models import User, Aliment
 from datetime import datetime
 
 
@@ -74,11 +74,8 @@ def register():
 @login_required
 def user(username):
     user = User.query.filter_by(username=username).first_or_404()
-    posts = [
-        {'author': user, 'body': 'Test post #1'},
-        {'author': user, 'body': 'Test post #2'}
-    ]
-    return render_template('user.html', user=user, posts=posts)
+    user_aliments = user.aliments.order_by(Aliment.aliment_name)
+    return render_template('user.html', user=user, user_aliments=user_aliments)
 
     
 @app.route('/edit_profile', methods=['GET', 'POST'])
@@ -103,7 +100,7 @@ def edit_profile():
 def newaliment():
     form = AlimentsForm()
     if form.validate_on_submit():
-        aliment = aliments(aliment_name = form.aliment_name.data, description = form.description.data )
+        aliment = Aliment(aliment_name = form.aliment_name.data, description = form.description.data, author=current_user )
         db.session.add(aliment)
         db.session.commit()
         flash('Congratulations, you added a new aliment !')
@@ -112,5 +109,5 @@ def newaliment():
 
 @app.route('/explorealiments', methods=['GET', 'POST'])
 def explorealiments():
-    get_aliments = aliments.query.order_by(aliments.id)
+    get_aliments = Aliment.query.order_by(Aliment.id)
     return render_template('aliments.html', title='explorealiments', get_aliments=get_aliments)
