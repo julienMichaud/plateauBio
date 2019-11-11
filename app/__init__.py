@@ -4,6 +4,7 @@ from flask_migrate import Migrate
 from flask_login import LoginManager
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
+from flask_bootstrap import Bootstrap
 from config import Config
 
 
@@ -14,7 +15,7 @@ migrate = Migrate(app, db)
 login = LoginManager(app)
 login.login_view = 'login'
 admin = Admin(app)
-
+bootstrap = Bootstrap(app)
 
 
 from app import routes, models

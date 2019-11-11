@@ -1,28 +1,43 @@
-{% extends "base.html" %}
+{% extends "base.html" %} {% block content %}
+<table>
+  <tr valign="top">
+    <td><img src="{{ user.avatar(128) }}" /></td>
+    <td>
+      <h1>User: {{ user.username }}</h1>
+      {% if user.about_me %}
+      <p>{{ user.about_me }}</p>
+      {% endif %} {% if user.last_seen %}
+      <p>Last seen on: {{ user.last_seen }}</p>
+      {% endif %} {% if user == current_user %}
+      <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
+      {% endif %}
+    </td>
+  </tr>
+</table>
 
-{% block content %}
-    <table>
-        <tr valign="top">
-            <td><img src="{{ user.avatar(128) }}"></td>
-            <td>
-                <h1>User: {{ user.username }}</h1>
-                {% if user.about_me %}<p>{{ user.about_me }}</p>{% endif %}
-                {% if user.last_seen %}<p>Last seen on: {{ user.last_seen }}</p>{% endif %}
-                {% if user == current_user %}
-                <p><a href="{{ url_for('edit_profile') }}">Edit your profile</a></p>
-                {% endif %}
-            </td>
-        </tr>
-    </table>
-    <hr>
-    <p> {{ user_aliments }} </p>
-    {% for aliment in user_aliments %}
-    <table>
-        <tr valign="top">
-            <td><br>{{ aliment.id }}  </td>
-            <td><br>{{ aliment.aliment_name }}</td>
-            <td><br>{{ aliment.description }}</td>
-        </tr>
-    </table>
-    {% endfor %}
-{% endblock %}
+<hr />
+<!--add a message when an aliment is deleted-->
+{% with messages = get_flashed_messages() %} {% if messages %}
+<ul class="flashes">
+  {% for message in messages %}
+  <div class="alert alert-success" role="alert">
+    You deleted an aliment, good job ! 
+  </div>
+  {% endfor %}
+</ul>
+{% endif %} {% endwith %} {% for aliment in user_aliments %}
+<table class="table">
+  <td><br />{{ aliment.id }}</td>
+  <td><br />{{ aliment.aliment_name }}</td>
+  <td><br />{{ aliment.description }}</td>
+  <td>
+    <form
+      action="{{ url_for('delete_aliment', aliment_id=aliment.id) }}"
+      method="post"
+    >
+      <input type="submit" class="btn btn-danger" value="Delete" />
+    </form>
+  </td>
+</table>
+
+{% endfor %} {% endblock %}

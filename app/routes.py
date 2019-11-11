@@ -77,7 +77,17 @@ def user(username):
     user_aliments = user.aliments.order_by(Aliment.aliment_name)
     return render_template('user.html', user=user, user_aliments=user_aliments)
 
-    
+@app.route('/delete_aliment/<int:aliment_id>', methods=['POST'])
+@login_required
+def delete_aliment(aliment_id):
+    aliment_to_delete = Aliment.query.get(aliment_id)
+    db.session.delete(aliment_to_delete)
+    db.session.commit()
+    flash('Congratulations, you deleted an aliment !')
+    return redirect(url_for('user', username=current_user.username))
+
+
+
 @app.route('/edit_profile', methods=['GET', 'POST'])
 @login_required
 def edit_profile():
