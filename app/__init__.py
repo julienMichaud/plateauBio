@@ -6,6 +6,7 @@ from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
 from flask_bootstrap import Bootstrap
 from config import Config
+from prometheus_flask_exporter import PrometheusMetrics, Counter
 
 
 app = Flask(__name__)
@@ -16,6 +17,7 @@ login = LoginManager(app)
 login.login_view = 'login'
 admin = Admin(app)
 bootstrap = Bootstrap(app)
+metrics = PrometheusMetrics(app)
 
 
 from app import routes, models

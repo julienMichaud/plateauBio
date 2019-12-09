@@ -1,0 +1,13 @@
+
+global:
+  scrape_interval:     15s
+  evaluation_interval: 30s
+
+scrape_configs:
+- job_name: plateauBio
+  metrics_path: /metrics
+  static_configs:
+    - targets:
+      - 172.17.0.3:5000
+
+

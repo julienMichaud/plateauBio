@@ -1,11 +1,12 @@
 from flask import render_template, flash, redirect, url_for, request
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.urls import url_parse
-from app import app, db
+from app import app, db, metrics, Counter
 from app.forms import LoginForm, RegistrationForm, EditProfileForm, AlimentsForm
 from app.models import User, Aliment
 from datetime import datetime
 
+metrics.info('app_info', 'Application info', version='1.0.3')
 
 @app.before_request
 def before_request():
@@ -105,6 +106,9 @@ def edit_profile():
                            form=form)
 
 
+
+
+aliments_added = Counter('aliments_added', 'Number of aliments added')
 @app.route('/newaliment', methods=['GET', 'POST'])
 @login_required
 def newaliment():
@@ -113,6 +117,8 @@ def newaliment():
         aliment = Aliment(aliment_name = form.aliment_name.data, description = form.description.data, author=current_user )
         db.session.add(aliment)
         db.session.commit()
+        aliments_added.inc()
+        print ("")
         flash('Congratulations, you added a new aliment !')
         return redirect(url_for('newaliment'))
     return render_template('newAliment.html', title='NewAliment', form=form)
