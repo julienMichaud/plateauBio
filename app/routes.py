@@ -109,6 +109,10 @@ def edit_profile():
 
 
 aliments_added = Counter('aliments_added', 'Number of aliments added')
+tomatoes_added = Counter('tomatoes_added', 'Number of  added')
+beans_added = Counter('beans_added', 'Number of beans added')
+apple_added = Counter('apple_added', 'Number of apple added')
+
 @app.route('/newaliment', methods=['GET', 'POST'])
 @login_required
 def newaliment():
@@ -117,6 +121,12 @@ def newaliment():
         aliment = Aliment(aliment_name = form.aliment_name.data, description = form.description.data, author=current_user )
         db.session.add(aliment)
         db.session.commit()
+        if form.aliment_name.data == "tomatoes":
+            tomatoes_added.inc()
+        elif form.aliment_name.data == "beans":
+            beans_added.inc()
+        elif form.aliment_name.data == "apple":
+            apple_added.inc()
         aliments_added.inc()
         print ("")
         flash('Congratulations, you added a new aliment !')
