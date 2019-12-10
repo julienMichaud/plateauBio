@@ -1,18 +1,20 @@
 # https://pythonspeed.com/articles/activate-virtualenv-dockerfile/
 FROM python:3.7
 
+RUN useradd -ms /bin/bash plateaubio
+WORKDIR /opt/plateaubio
+RUN chown plateaubio:plateaubio /opt/plateaubio -R 
+USER plateaubio
 
-WORKDIR /app
+COPY --chown=plateaubio:plateaubio requirements.txt .
 
-COPY requirements.txt /app
+RUN pip install --user -r requirements.txt
 
-RUN pip install -r requirements.txt
+COPY --chown=plateaubio:plateaubio . .
 
-COPY . /app
+ENV PATH="/home/plateaubio/.local/bin/:$PATH"
 
-ENV VIRTUAL_ENV=/app
-ENV PATH="$VIRTUAL_ENV/plateaubio/bin:$PATH"
-RUN pip install gunicorn
+RUN pip install --user gunicorn
 
 EXPOSE 5000
 ENTRYPOINT ["./boot.sh"]
